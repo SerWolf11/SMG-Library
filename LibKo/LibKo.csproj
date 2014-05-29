@@ -58,6 +58,7 @@
     <Compile Include="ServiceConnection\Settings.cs" />
     <Compile Include="SystemConfiguration\AppSettingsUtil.cs" />
     <Compile Include="SystemConfiguration\SystemConfiguration.cs" />
+    <Compile Include="Utilties\Enumerables.cs" />
     <Compile Include="WAPI\WAPI.cs" />
     <Compile Include="WAPI\Parameters.cs" />
     <Compile Include="WAPI\WP.cs" />
