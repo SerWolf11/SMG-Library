@@ -1,46 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace LibKo.WAPI
 {
     public class Parameters
     {
-        private String _Name = string.Empty;
+        private String _Name = "";
 
         public String Name
         {
-            get
-            {
-                return _Name;
-            }
-            set
-            {
-                _Name = value;
-            }
+            get { return _Name; }
+            set { _Name = value; }
         }
 
         private Object _Value = new Object();
 
         public Object Value
         {
-            get
-            {
-                return _Value;
-            }
-            set
-            {
-                _Value = value;
-            }
+            get { return _Value; }
+            set { _Value = value; }
         }
 
-        private String _ValueString = string.Empty;
+        private String _ValueString = "";
 
         public String ValueString
         {
             get
             {
-                ValueString = string.Empty;
+                ValueString = "";
                 return _ValueString;
             }
             private set
@@ -63,9 +53,13 @@ namespace LibKo.WAPI
                             value = "";
                         }
                         break;
+
+
                 }
                 _ValueString = value;
             }
         }
+
     }
+
 }

@@ -7,11 +7,23 @@ using System.CodeDom;
 using System.Dynamic;
 using System.Reflection.Emit;
 using System.Reflection;
-
 namespace LibKo.Reflect
 {
     public class DynamicClass
     {
+        //static void Main(string[] args)
+        //{
+        //    string className = "BlogPost";
+
+        //    var props = new Dictionary<string, Type>() {
+        //        { "Title", typeof(string) },
+        //        { "Text", typeof(string) },
+        //        { "Tags", typeof(string[]) }
+        //    };
+
+        //    createType(className, props);
+        //}
+
         public DynamicClass()
         {
         }
@@ -19,7 +31,7 @@ namespace LibKo.Reflect
         public static void createType(string name, IDictionary<string, Type> props)
         {
             var csc = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v4.0" } });
-            var parameters = new CompilerParameters(new [] { "mscorlib.dll", "System.Core.dll" }, "Test.Dynamic.dll", false);
+            var parameters = new CompilerParameters(new[] { "mscorlib.dll", "System.Core.dll" }, "Test.Dynamic.dll", false);
             parameters.GenerateExecutable = false;
 
             var compileUnit = new CodeCompileUnit();
@@ -63,23 +75,23 @@ namespace LibKo.Reflect
 
         public DynamicClass Add<T>(string key, T value)
         {
-            var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName("DynamicAssembly"), AssemblyBuilderAccess.Run);
-            var moduleBuilder = assemblyBuilder.DefineDynamicModule("Dynamic.dll");
-            var typeBuilder = moduleBuilder.DefineType(Guid.NewGuid().ToString());
+            AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName("DynamicAssembly"), AssemblyBuilderAccess.Run);
+            ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("Dynamic.dll");
+            TypeBuilder typeBuilder = moduleBuilder.DefineType(Guid.NewGuid().ToString());
             typeBuilder.SetParent(this.GetType());
-            var propertyBuilder = typeBuilder.DefineProperty(key, PropertyAttributes.None, typeof(T), Type.EmptyTypes);
+            PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(key, PropertyAttributes.None, typeof(T), Type.EmptyTypes);
 
-            var getMethodBuilder = typeBuilder.DefineMethod("get_" + key, MethodAttributes.Public, CallingConventions.HasThis, typeof(T), Type.EmptyTypes);
-            var getter = getMethodBuilder.GetILGenerator();
+            MethodBuilder getMethodBuilder = typeBuilder.DefineMethod("get_" + key, MethodAttributes.Public, CallingConventions.HasThis, typeof(T), Type.EmptyTypes);
+            ILGenerator getter = getMethodBuilder.GetILGenerator();
             getter.Emit(OpCodes.Ldarg_0);
             getter.Emit(OpCodes.Ldstr, key);
             getter.Emit(OpCodes.Callvirt, typeof(DynamicClass).GetMethod("Get", BindingFlags.Instance | BindingFlags.NonPublic).MakeGenericMethod(typeof(T)));
             getter.Emit(OpCodes.Ret);
             propertyBuilder.SetGetMethod(getMethodBuilder);
 
-            var type = typeBuilder.CreateType();
+            Type type = typeBuilder.CreateType();
 
-            var child = (DynamicClass)Activator.CreateInstance(type);
+            DynamicClass child = (DynamicClass)Activator.CreateInstance(type);
             child.dictionary = this.dictionary;
             dictionary.Add(key, value);
             return child;
@@ -91,5 +103,6 @@ namespace LibKo.Reflect
         }
 
         private Dictionary<string, object> dictionary = new Dictionary<string, object>();
+
     }
 }

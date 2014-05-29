@@ -9,12 +9,13 @@ namespace LibKo.ServiceConnection
     {
         public static HttpClient ClientProperties()
         {
-            var client = new HttpClient();
+            HttpClient client = new HttpClient();
 
             try
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["WebApiURL"]);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(string.Format("{0}:{1}", "Farmacia", "12345679890"))));
                 client.MaxResponseContentBufferSize = 1024 * 1024 * 1024;
                 client.Timeout = TimeSpan.FromMinutes(30.00);
             }
@@ -27,12 +28,13 @@ namespace LibKo.ServiceConnection
 
         public static HttpClient ClientProperties(String Setting)
         {
-            var client = new HttpClient();
+            HttpClient client = new HttpClient();
 
             try
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings[Setting]);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(string.Format("{0}:{1}", "Farmacia", "12345679890"))));
                 client.MaxResponseContentBufferSize = 1024 * 1024 * 1024;
                 client.Timeout = TimeSpan.FromMinutes(30.00);
             }
@@ -42,5 +44,6 @@ namespace LibKo.ServiceConnection
             }
             return client;
         }
+
     }
 }

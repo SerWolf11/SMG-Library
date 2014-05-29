@@ -3,23 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using LibKo.ServiceConnection;
-
 namespace LibKo.WAPI
 {
-    public class WP<T>
-        where T: new()
+    public class WP<T> where T : new()
     {
+        #region Constructor
         public WP()
         {
-            var comodin = new T();
+            T comodin = new T();
         }
+        #endregion
 
+        #region Get Methods
         public static List<T> GetList(Type tipo)
         {
-            var Lista = new List<T>();
+            List<T> Lista = new List<T>();
 
             var url = tipo.Name;
-            var response = ServiceData.ClientProperties.GetAsync(url).Result;
+            HttpResponseMessage response = ServiceData.ClientProperties.GetAsync(url).Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -32,10 +33,10 @@ namespace LibKo.WAPI
 
         public static List<T> GetList(String URI)
         {
-            var Lista = new List<T>();
+            List<T> Lista = new List<T>();
 
             var url = URI;
-            var response = ServiceData.ClientProperties.GetAsync(url).Result;
+            HttpResponseMessage response = ServiceData.ClientProperties.GetAsync(url).Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -48,10 +49,10 @@ namespace LibKo.WAPI
 
         public static List<T> GetList(Type tipo, String URI)
         {
-            var Lista = new List<T>();
+            List<T> Lista = new List<T>();
 
             var url = tipo.Name + URI;
-            var response = ServiceData.ClientProperties.GetAsync(url).Result;
+            HttpResponseMessage response = ServiceData.ClientProperties.GetAsync(url).Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -64,10 +65,10 @@ namespace LibKo.WAPI
 
         public static T Get(Type tipo, String URI)
         {
-            var Lista = new T();
+            T Lista = new T();
 
             var url = tipo.Name + URI;
-            var response = ServiceData.ClientProperties.GetAsync(url).Result;
+            HttpResponseMessage response = ServiceData.ClientProperties.GetAsync(url).Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -80,10 +81,10 @@ namespace LibKo.WAPI
 
         public static T Get(Type tipo)
         {
-            var Lista = new T();
+            T Lista = new T();
 
             var url = tipo.Name;
-            var response = ServiceData.ClientProperties.GetAsync(url).Result;
+            HttpResponseMessage response = ServiceData.ClientProperties.GetAsync(url).Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -96,10 +97,10 @@ namespace LibKo.WAPI
 
         public static T Get(String URI)
         {
-            var Lista = new T();
+            T Lista = new T();
 
             var url = URI;
-            var response = ServiceData.ClientProperties.GetAsync(url).Result;
+            HttpResponseMessage response = ServiceData.ClientProperties.GetAsync(url).Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -109,11 +110,13 @@ namespace LibKo.WAPI
 
             return Lista;
         }
+        #endregion
 
-        public static T Post<S>(S s)
-            where S: new()
+        #region Post Methods
+
+        public static T Post<S>(S s) where S : new()
         {
-            var ID = new T();
+            T ID = new T();
             try
             {
                 var url = s.GetType().Name;
@@ -124,6 +127,7 @@ namespace LibKo.WAPI
                     var _ID = response.Content.ReadAsAsync<T>().Result;
                     ID = _ID;
                 }
+
             }
             catch (HttpRequestException e)
             {
@@ -132,10 +136,9 @@ namespace LibKo.WAPI
             return ID;
         }
 
-        public static T Post<S>(S s, String URI)
-            where S: new()
+        public static T Post<S>(S s, String URI) where S : new()
         {
-            var ID = new T();
+            T ID = new T();
             try
             {
                 var url = s.GetType().Name + URI;
@@ -146,6 +149,7 @@ namespace LibKo.WAPI
                     var _ID = response.Content.ReadAsAsync<T>().Result;
                     ID = _ID;
                 }
+
             }
             catch (HttpRequestException e)
             {
@@ -154,10 +158,9 @@ namespace LibKo.WAPI
             return ID;
         }
 
-        public static T Post<S>(String URI, S s)
-            where S: new()
+        public static T Post<S>(String URI, S s) where S : new()
         {
-            var ID = new T();
+            T ID = new T();
             try
             {
                 var url = URI;
@@ -168,6 +171,7 @@ namespace LibKo.WAPI
                     var _ID = response.Content.ReadAsAsync<T>().Result;
                     ID = _ID;
                 }
+
             }
             catch (HttpRequestException e)
             {
@@ -176,10 +180,12 @@ namespace LibKo.WAPI
             return ID;
         }
 
-        public static T Put<S>(S s)
-            where S: new()
+        #endregion
+
+        #region Put Methods
+        public static T Put<S>(S s) where S : new()
         {
-            var ID = new T();
+            T ID = new T();
             try
             {
                 var url = s.GetType().Name;
@@ -198,10 +204,9 @@ namespace LibKo.WAPI
             return ID;
         }
 
-        public static T Put<S>(S s, String URI)
-            where S: new()
+        public static T Put<S>(S s, String URI) where S : new()
         {
-            var ID = new T();
+            T ID = new T();
             try
             {
                 var url = s.GetType().Name + URI;
@@ -220,10 +225,9 @@ namespace LibKo.WAPI
             return ID;
         }
 
-        public static T Put<S>(String URI, S s)
-            where S: new()
+        public static T Put<S>(String URI, S s) where S : new()
         {
-            var ID = new T();
+            T ID = new T();
             try
             {
                 var url = URI;
@@ -243,12 +247,15 @@ namespace LibKo.WAPI
         }
 
 
-        public static S Delete<S>(String URI)
-            where S: new()
+        #endregion
+
+        #region Delete Methods
+        public static S Delete<S>(String URI) where S : new()
         {
-            var s = new S();
+            S s = new S();
             try
             {
+
                 var url = URI;
                 var response = ServiceData.ClientProperties.DeleteAsync(url).Result;
 
@@ -265,9 +272,10 @@ namespace LibKo.WAPI
         }
         public static Boolean Delete(String URI)
         {
-            var s = false;
+            Boolean s = false;
             try
             {
+
                 var url = URI;
                 var response = ServiceData.ClientProperties.DeleteAsync(url).Result;
 
@@ -279,33 +287,26 @@ namespace LibKo.WAPI
             }
             return s;
         }
+        #endregion
+
+        #region Properties
 
         private int count = 0;
 
         public int Count
         {
-            get
-            {
-                return count;
-            }
-            private set
-            {
-                count = value;
-            }
+            get { return count; }
+            private set { count = value; }
         }
 
         private List<Object> _History = new List<Object>();
 
         public List<Object> History
         {
-            get
-            {
-                return _History;
-            }
-            set
-            {
-                _History = value;
-            }
+            get { return _History; }
+            set { _History = value; }
         }
+
+        #endregion
     }
 }

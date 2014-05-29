@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Xml;
 using System.Windows.Forms;
-
 namespace DatabaseUtilities.DatabaseUtilities
 {
     public abstract class DBFunctions
     {
         private static string GetConnectionString()
         {
-            var str = string.Empty;
+            string str = "";
 
             try
             {
@@ -20,26 +20,26 @@ namespace DatabaseUtilities.DatabaseUtilities
             }
             catch (Exception)
             {
-                str = string.Empty;
+
+                str = "";
             }
 
             return str;
+
         }
 
         private static object ReadValue(string selectStatement, string field)
         {
-            var obj = (object)null;
-            var connection = new SqlConnection(DBFunctions.GetConnectionString());
+            object obj = (object)null;
+            SqlConnection connection = new SqlConnection(DBFunctions.GetConnectionString());
             try
             {
                 SqlConnection.ClearAllPools();
-                var sqlCommand = new SqlCommand(selectStatement, connection);
+                SqlCommand sqlCommand = new SqlCommand(selectStatement, connection);
                 connection.Open();
-                var sqlDataReader = sqlCommand.ExecuteReader();
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
                 if (sqlDataReader.Read())
-                {
                     obj = sqlDataReader[field];
-                }
                 sqlDataReader.Close();
                 sqlDataReader.Dispose();
             }
@@ -50,10 +50,8 @@ namespace DatabaseUtilities.DatabaseUtilities
             catch (InvalidOperationException ex)
             {
                 if (ex.Message.StartsWith("Timeout"))
-                {
                     return DBFunctions.ReadValue(selectStatement, field);
-                }
-                var num = (int)MessageBox.Show(ex.Message, "Database access error");
+                int num = (int)MessageBox.Show(ex.Message, "Database access error");
             }
             finally
             {
@@ -65,17 +63,15 @@ namespace DatabaseUtilities.DatabaseUtilities
 
         private static ArrayList ReadValues(string selectStatement, string field)
         {
-            var arrayList = new ArrayList();
-            var connection = new SqlConnection(DBFunctions.GetConnectionString());
+            ArrayList arrayList = new ArrayList();
+            SqlConnection connection = new SqlConnection(DBFunctions.GetConnectionString());
             try
             {
-                var sqlCommand = new SqlCommand(selectStatement, connection);
+                SqlCommand sqlCommand = new SqlCommand(selectStatement, connection);
                 connection.Open();
-                var sqlDataReader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
                 while (sqlDataReader.Read())
-                {
                     arrayList.Add(sqlDataReader[field]);
-                }
                 sqlDataReader.Close();
             }
             catch (SqlException ex)
@@ -88,9 +84,7 @@ namespace DatabaseUtilities.DatabaseUtilities
         public static object DLookup(string field, string table, string criteria)
         {
             if (criteria == null)
-            {
                 return (object)null;
-            }
             return DBFunctions.ReadValue("SELECT [" + field + "] FROM [" + table + "] WHERE (" + criteria + ")", field);
         }
 
@@ -102,27 +96,21 @@ namespace DatabaseUtilities.DatabaseUtilities
         public static ArrayList DLookupMult(string field, string table, string criteria)
         {
             if (criteria == null)
-            {
                 return (ArrayList)null;
-            }
             return DBFunctions.ReadValues("SELECT [" + field + "] FROM [" + table + "] WHERE (" + criteria + ")", field);
         }
 
         public static ArrayList DLookupMult(string field, string table, string criteria, string sortField)
         {
             if (criteria == null)
-            {
                 return (ArrayList)null;
-            }
             return DBFunctions.ReadValues("SELECT [" + field + "] FROM [" + table + "] WHERE (" + criteria + ") ORDER BY " + sortField, field);
         }
 
         public static object DLookup(string field, string table, Guid primaryKey)
         {
             if (primaryKey.Equals((object)null))
-            {
                 return (object)null;
-            }
             return DBFunctions.ReadValue("SELECT [" + field + "] FROM [" + table + "] WHERE ([" + DBFunctions.GetKeyField(table) + "] = '" + primaryKey.ToString() + "')", field);
         }
 
@@ -133,22 +121,18 @@ namespace DatabaseUtilities.DatabaseUtilities
 
         public static double DMax(string field, string table, string criteria)
         {
-            var result = -1.0;
-            var arrayList = DBFunctions.DMax(field, table, criteria, 1, "[" + field + "]");
+            double result = -1.0;
+            ArrayList arrayList = DBFunctions.DMax(field, table, criteria, 1, "[" + field + "]");
             if (arrayList.Count > 0)
-            {
                 double.TryParse(arrayList[0].ToString(), out result);
-            }
             return result;
         }
 
         public static ArrayList DMax(string field, string table, string criteria, int howMany, string orderField)
         {
-            var str = "SELECT TOP " + howMany.ToString() + " [" + field + "] FROM [" + table + "]";
+            string str = "SELECT TOP " + howMany.ToString() + " [" + field + "] FROM [" + table + "]";
             if (criteria != null)
-            {
                 str = str + " WHERE " + criteria;
-            }
             return DBFunctions.ReadValues(str + " ORDER BY " + orderField + " DESC", field);
         }
 
@@ -159,22 +143,18 @@ namespace DatabaseUtilities.DatabaseUtilities
 
         public static double DMin(string field, string table, string criteria)
         {
-            var result = -1.0;
-            var arrayList = DBFunctions.DMin(field, table, criteria, 1, "[" + field + "]");
+            double result = -1.0;
+            ArrayList arrayList = DBFunctions.DMin(field, table, criteria, 1, "[" + field + "]");
             if (arrayList.Count > 0)
-            {
                 double.TryParse(arrayList[0].ToString(), out result);
-            }
             return result;
         }
 
         public static ArrayList DMin(string field, string table, string criteria, int howMany, string orderField)
         {
-            var str = "SELECT TOP " + (object)howMany + " " + field + " FROM " + table;
+            string str = "SELECT TOP " + (object)howMany + " " + field + " FROM " + table;
             if (criteria != null)
-            {
                 str = str + " WHERE " + criteria;
-            }
             return DBFunctions.ReadValues(str + " ORDER BY " + orderField, field);
         }
 
@@ -196,14 +176,10 @@ namespace DatabaseUtilities.DatabaseUtilities
         public static ArrayList DFirst(string field, string table, string criteria, int howMany)
         {
             if (field == null)
-            {
                 field = DBFunctions.GetKeyField(table);
-            }
-            var selectStatement = "SELECT TOP " + howMany.ToString() + " [" + field + "] FROM [" + table + "]";
+            string selectStatement = "SELECT TOP " + howMany.ToString() + " [" + field + "] FROM [" + table + "]";
             if (criteria != null)
-            {
                 selectStatement = selectStatement + " WHERE " + criteria;
-            }
             return DBFunctions.ReadValues(selectStatement, field);
         }
 
@@ -225,14 +201,10 @@ namespace DatabaseUtilities.DatabaseUtilities
         public static ArrayList DLast(string field, string table, string criteria, int howMany)
         {
             if (field == null)
-            {
                 field = DBFunctions.GetKeyField(table);
-            }
-            var str = "SELECT TOP " + howMany.ToString() + " [" + field + "] FROM [" + table + "]";
+            string str = "SELECT TOP " + howMany.ToString() + " [" + field + "] FROM [" + table + "]";
             if (criteria != null)
-            {
                 str = str + " WHERE " + criteria;
-            }
             return DBFunctions.ReadValues(str + " ORDER BY [AutoNumber] DESC", field);
         }
 
@@ -243,11 +215,9 @@ namespace DatabaseUtilities.DatabaseUtilities
 
         public static double DSum(string field, string table, string criteria)
         {
-            var selectStatement = "SELECT ISNULL(SUM([" + field + "]),0) AS SumField FROM [" + table + "]";
+            string selectStatement = "SELECT ISNULL(SUM([" + field + "]),0) AS SumField FROM [" + table + "]";
             if (criteria != null)
-            {
                 selectStatement = selectStatement + " WHERE " + criteria;
-            }
             return double.Parse(DBFunctions.ReadValue(selectStatement, "SumField").ToString());
         }
 
@@ -258,11 +228,9 @@ namespace DatabaseUtilities.DatabaseUtilities
 
         public static double DAverage(string field, string table, string criteria)
         {
-            var selectStatement = "SELECT isnull(AVG([" + field + "]),0) AS AvgField FROM " + table + "]";
+            string selectStatement = "SELECT isnull(AVG([" + field + "]),0) AS AvgField FROM " + table + "]";
             if (criteria != null)
-            {
                 selectStatement = selectStatement + " WHERE " + criteria;
-            }
             return double.Parse(DBFunctions.ReadValue(selectStatement, "AvgField").ToString());
         }
 
@@ -279,50 +247,42 @@ namespace DatabaseUtilities.DatabaseUtilities
         public static int DCount(string field, string table, string criteria)
         {
             if (!field.Equals("*"))
-            {
                 field = "[" + field + "]";
-            }
-            var selectStatement = "SELECT isnull(COUNT(" + field + "),0) AS CountField FROM [" + table + "]";
+            string selectStatement = "SELECT isnull(COUNT(" + field + "),0) AS CountField FROM [" + table + "]";
             if (criteria != null)
-            {
                 selectStatement = selectStatement + " WHERE " + criteria;
-            }
             return int.Parse(DBFunctions.ReadValue(selectStatement, "CountField").ToString());
         }
 
         public static int DUpdate(string field, string table, string criteria, string newValue)
         {
-            var num1 = -1;
-            var connection = new SqlConnection(DBFunctions.GetConnectionString());
-            var cmdText = "UPDATE [" + table + "] SET [" + field + "] = " + newValue;
+            int num1 = -1;
+            SqlConnection connection = new SqlConnection(DBFunctions.GetConnectionString());
+            string cmdText = "UPDATE [" + table + "] SET [" + field + "] = " + newValue;
             if (criteria != null)
-            {
                 cmdText = cmdText + " WHERE (" + criteria + ")";
-            }
             try
             {
-                var sqlCommand = new SqlCommand(cmdText, connection);
+                SqlCommand sqlCommand = new SqlCommand(cmdText, connection);
                 connection.Open();
                 num1 = sqlCommand.ExecuteNonQuery();
             }
             catch (SqlException ex)
             {
-                var num2 = (int)MessageBox.Show(ex.Message);
+                int num2 = (int)MessageBox.Show(ex.Message);
             }
             return num1;
         }
 
         public static Guid DBInsert(string[] fieldNames, string table, object[] values, Guid userID)
         {
-            var num = -1;
+            int num = -1;
             if (fieldNames.Length != values.Length)
-            {
                 return new Guid();
-            }
-            var connection = new SqlConnection(DBFunctions.GetConnectionString());
-            var str1 = string.Empty;
-            var str2 = string.Empty;
-            for (var index = 0; index < fieldNames.Length; ++index)
+            SqlConnection connection = new SqlConnection(DBFunctions.GetConnectionString());
+            string str1 = "";
+            string str2 = "";
+            for (int index = 0; index < fieldNames.Length; ++index)
             {
                 if (fieldNames[index] != "[User]" && fieldNames[index] != "RegDate")
                 {
@@ -330,12 +290,12 @@ namespace DatabaseUtilities.DatabaseUtilities
                     str2 = values[index].GetType() != typeof(string) ? (values[index].GetType() != typeof(Guid) ? str2 + values[index].ToString() + ", " : str2 + "'" + values[index].ToString() + "', ") : str2 + "N'" + values[index].ToString() + "', ";
                 }
             }
-            var str3 = str1 + "[User]";
-            var str4 = str2 + "'" + userID.ToString() + "'";
-            var cmdText = "INSERT INTO [" + table + "] (" + str3 + ") VALUES (" + str4 + ")";
+            string str3 = str1 + "[User]";
+            string str4 = str2 + "'" + userID.ToString() + "'";
+            string cmdText = "INSERT INTO [" + table + "] (" + str3 + ") VALUES (" + str4 + ")";
             try
             {
-                var sqlCommand = new SqlCommand(cmdText, connection);
+                SqlCommand sqlCommand = new SqlCommand(cmdText, connection);
                 connection.Open();
                 num = sqlCommand.ExecuteNonQuery();
             }
@@ -349,33 +309,27 @@ namespace DatabaseUtilities.DatabaseUtilities
                 connection.Dispose();
             }
             if (num == 1)
-            {
                 return DBFunctions.DLast(table);
-            }
             else
-            {
                 return new Guid();
-            }
         }
 
         public static int DBDelete(Guid primaryKey, string table)
         {
-            var num1 = -1;
+            int num1 = -1;
             if (string.IsNullOrEmpty(table))
-            {
                 return num1;
-            }
-            var connection = new SqlConnection(DBFunctions.GetConnectionString());
-            var cmdText = "DELETE FROM [" + table + "] WHERE [" + DBFunctions.GetKeyField(table) + "] = '" + primaryKey.ToString() + "'";
+            SqlConnection connection = new SqlConnection(DBFunctions.GetConnectionString());
+            string cmdText = "DELETE FROM [" + table + "] WHERE [" + DBFunctions.GetKeyField(table) + "] = '" + primaryKey.ToString() + "'";
             try
             {
-                var sqlCommand = new SqlCommand(cmdText, connection);
+                SqlCommand sqlCommand = new SqlCommand(cmdText, connection);
                 connection.Open();
                 num1 = sqlCommand.ExecuteNonQuery();
             }
             catch (SqlException ex)
             {
-                var num2 = (int)MessageBox.Show(ex.Message + "\n\nCommand was: " + cmdText);
+                int num2 = (int)MessageBox.Show(ex.Message + "\n\nCommand was: " + cmdText);
             }
             finally
             {
@@ -387,28 +341,24 @@ namespace DatabaseUtilities.DatabaseUtilities
 
         public static int DBDelete(Guid[] primaryKeys, string table)
         {
-            var num1 = -1;
+            int num1 = -1;
             if (primaryKeys.Length < 1 || string.IsNullOrEmpty(table))
-            {
                 return num1;
-            }
-            var connection = new SqlConnection(DBFunctions.GetConnectionString());
-            var keyField = DBFunctions.GetKeyField(table);
-            var str = "DELETE FROM " + table + " WHERE";
+            SqlConnection connection = new SqlConnection(DBFunctions.GetConnectionString());
+            string keyField = DBFunctions.GetKeyField(table);
+            string str = "DELETE FROM " + table + " WHERE";
             foreach (Guid guid in primaryKeys)
-            {
                 str = str + " (" + keyField + " = '" + guid.ToString() + "') OR";
-            }
-            var cmdText = str.Substring(0, str.Length - 3);
+            string cmdText = str.Substring(0, str.Length - 3);
             try
             {
-                var sqlCommand = new SqlCommand(cmdText, connection);
+                SqlCommand sqlCommand = new SqlCommand(cmdText, connection);
                 connection.Open();
                 num1 = sqlCommand.ExecuteNonQuery();
             }
             catch (SqlException ex)
             {
-                var num2 = (int)MessageBox.Show(ex.Message + "\n\nCommand was: " + cmdText);
+                int num2 = (int)MessageBox.Show(ex.Message + "\n\nCommand was: " + cmdText);
             }
             finally
             {
@@ -420,22 +370,20 @@ namespace DatabaseUtilities.DatabaseUtilities
 
         public static int DBDelete(string criteria, string table)
         {
-            var num1 = -1;
+            int num1 = -1;
             if (string.IsNullOrEmpty(criteria) || string.IsNullOrEmpty(table))
-            {
                 return num1;
-            }
-            var connection = new SqlConnection(DBFunctions.GetConnectionString());
-            var cmdText = "DELETE FROM " + table + " WHERE " + criteria;
+            SqlConnection connection = new SqlConnection(DBFunctions.GetConnectionString());
+            string cmdText = "DELETE FROM " + table + " WHERE " + criteria;
             try
             {
-                var sqlCommand = new SqlCommand(cmdText, connection);
+                SqlCommand sqlCommand = new SqlCommand(cmdText, connection);
                 connection.Open();
                 num1 = sqlCommand.ExecuteNonQuery();
             }
             catch (SqlException ex)
             {
-                var num2 = (int)MessageBox.Show(ex.Message + "\n\nCommand was: " + cmdText);
+                int num2 = (int)MessageBox.Show(ex.Message + "\n\nCommand was: " + cmdText);
             }
             finally
             {
@@ -452,20 +400,18 @@ namespace DatabaseUtilities.DatabaseUtilities
 
         public static ArrayList ExecuteReaderQuery(string commandText)
         {
-            var arrayList = new ArrayList();
-            var connection = new SqlConnection(DBFunctions.GetConnectionString());
+            ArrayList arrayList = new ArrayList();
+            SqlConnection connection = new SqlConnection(DBFunctions.GetConnectionString());
             try
             {
-                var sqlCommand = new SqlCommand(commandText, connection);
+                SqlCommand sqlCommand = new SqlCommand(commandText, connection);
                 connection.Open();
-                var sqlDataReader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
+                SqlDataReader sqlDataReader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
                 while (sqlDataReader.Read())
                 {
-                    var dictionary = new Dictionary<string, string>(sqlDataReader.FieldCount);
-                    for (var ordinal = 0; ordinal < sqlDataReader.FieldCount; ++ordinal)
-                    {
+                    Dictionary<string, string> dictionary = new Dictionary<string, string>(sqlDataReader.FieldCount);
+                    for (int ordinal = 0; ordinal < sqlDataReader.FieldCount; ++ordinal)
                         dictionary.Add(sqlDataReader.GetName(ordinal), sqlDataReader[ordinal].ToString());
-                    }
                     arrayList.Add((object)dictionary);
                 }
                 sqlDataReader.Close();
@@ -480,17 +426,17 @@ namespace DatabaseUtilities.DatabaseUtilities
 
         public static DataSet GetData(String consult)
         {
-            var connection = new SqlConnection(DBFunctions.GetConnectionString());
+            SqlConnection connection = new SqlConnection(DBFunctions.GetConnectionString());
 
-            var consultCommand = new SqlCommand(consult, connection);
+            SqlCommand consultCommand = new SqlCommand(consult, connection);
 
-            var set = new DataSet("Result");
+            DataSet set = new DataSet("Result");
 
             try
             {
                 connection.Open();
 
-                var sda = new SqlDataAdapter(consultCommand);
+                SqlDataAdapter sda = new SqlDataAdapter(consultCommand);
 
                 sda.Fill(set);
             }
@@ -507,21 +453,19 @@ namespace DatabaseUtilities.DatabaseUtilities
 
         public static int ExecuteNonReader(string commandText)
         {
-            var num1 = -1;
+            int num1 = -1;
             if (string.IsNullOrEmpty(commandText))
-            {
                 return num1;
-            }
-            var connection = new SqlConnection(DBFunctions.GetConnectionString());
+            SqlConnection connection = new SqlConnection(DBFunctions.GetConnectionString());
             try
             {
-                var sqlCommand = new SqlCommand(commandText, connection);
+                SqlCommand sqlCommand = new SqlCommand(commandText, connection);
                 connection.Open();
                 num1 = sqlCommand.ExecuteNonQuery();
             }
             catch (SqlException ex)
             {
-                var num2 = (int)MessageBox.Show(ex.Message + "\n\nCommand was: " + commandText);
+                int num2 = (int)MessageBox.Show(ex.Message + "\n\nCommand was: " + commandText);
             }
             finally
             {

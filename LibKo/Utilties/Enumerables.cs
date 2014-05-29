@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace LibKo.Utilties
 {
-    public static class Enumerables
+   public static class Enumerables
     {
         /// <summary>
         /// Tries to get an object of type T at specified index. If out of range, default(T) is returned
@@ -31,8 +33,9 @@ namespace LibKo.Utilties
 
         public static IEnumerable<T> Randomize<T>(this IEnumerable<T> source)
         {
-            var rnd = new Random();
+            Random rnd = new Random();
             return source.OrderBy<T, int>((item) => rnd.Next());
         }
+
     }
 }

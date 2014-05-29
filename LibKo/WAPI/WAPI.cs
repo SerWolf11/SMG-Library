@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using LibKo.ServiceConnection;
-
 namespace LibKo.WAPI
 {
     public class WAPI
     {
-        public static List<T> GetList<T>(String URI)
-            where T: new()
+        #region Get Methods
+
+        public static List<T> GetList<T>(String URI) where T : new()
         {
-            var Lista = new List<T>();
+            List<T> Lista = new List<T>();
 
             var url = URI;
-            var response = Settings.ClientProperties().GetAsync(url).Result;
+            //HttpResponseMessage response = Settings.ClientProperties().GetAsync(url).Result;
+            HttpResponseMessage response = Settings.ClientProperties().GetAsync(url).Result;
             if (response.IsSuccessStatusCode)
             {
                 var lista = response.Content.ReadAsAsync<IEnumerable<T>>().Result;
@@ -23,13 +24,12 @@ namespace LibKo.WAPI
 
             return Lista;
         }
-        public static T Get<T>(String URI)
-            where T: new()
+        public static T Get<T>(String URI) where T : new()
         {
-            var Lista = new T();
+            T Lista = new T();
 
             var url = URI;
-            var response = Settings.ClientProperties().GetAsync(url).Result;
+            HttpResponseMessage response = Settings.ClientProperties().GetAsync(url).Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -39,11 +39,10 @@ namespace LibKo.WAPI
 
             return Lista;
         }
-        public static T Get<T>(String URI, Boolean History)
-            where T: new()
+        public static T Get<T>(String URI, Boolean History) where T : new()
         {
-            var Lista = new T();
-            var flag = false;
+            T Lista = new T();
+            Boolean flag = false;
 
             if (History)
             {
@@ -59,7 +58,7 @@ namespace LibKo.WAPI
             if (!flag)
             {
                 var url = URI;
-                var response = Settings.ClientProperties().GetAsync(url).Result;
+                HttpResponseMessage response = Settings.ClientProperties().GetAsync(url).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -71,44 +70,41 @@ namespace LibKo.WAPI
                     addToHistory(Lista);
                 }
             }
-            else
+            else if (History)
             {
-                if (History)
+                foreach (var item in _History)
                 {
-                    foreach (var item in _History)
+                    if (Lista.GetType() == item.GetType())
                     {
-                        if (Lista.GetType() == item.GetType())
+                        try
                         {
-                            try
-                            {
-                                Lista = (T)item;
-                            }
-                            catch (Exception)
-                            {
-                                var url = URI;
-                                var response = Settings.ClientProperties().GetAsync(url).Result;
+                            Lista = (T)item;
+                        }
+                        catch (Exception)
+                        {
+                            var url = URI;
+                            HttpResponseMessage response = Settings.ClientProperties().GetAsync(url).Result;
 
-                                if (response.IsSuccessStatusCode)
-                                {
-                                    var lista = response.Content.ReadAsAsync<T>().Result;
-                                    Lista = lista;
-                                }
-                                if (History)
-                                {
-                                    addToHistory(Lista);
-                                }
+                            if (response.IsSuccessStatusCode)
+                            {
+                                var lista = response.Content.ReadAsAsync<T>().Result;
+                                Lista = lista;
+                            }
+                            if (History)
+                            {
+                                addToHistory(Lista);
                             }
                         }
                     }
                 }
             }
+
             return Lista;
         }
 
-        public static T Get<T>(String ServiceName, params Parameters[] parameters)
-            where T: new()
+        public static T Get<T>(String ServiceName, params Parameters[] parameters) where T : new()
         {
-            var Lista = new T();
+            T Lista = new T();
 
             var url = ServiceName + "?";
 
@@ -117,7 +113,7 @@ namespace LibKo.WAPI
                 url = String.Format("{0}{1}={2}&", url, item.Name, item.ValueString);
             }
             url = url.Substring(0, url.Length - 1);
-            var response = Settings.ClientProperties().GetAsync(url).Result;
+            HttpResponseMessage response = Settings.ClientProperties().GetAsync(url).Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -128,11 +124,15 @@ namespace LibKo.WAPI
             return Lista;
         }
 
+        #endregion
+
+        #region Post Methods
+
         public static T Post<T, S>(S s)
-            where T: new()
-            where S: new()
+            where S : new()
+            where T : new()
         {
-            var ID = new T();
+            T ID = new T();
             try
             {
                 var url = s.GetType().Name;
@@ -143,6 +143,7 @@ namespace LibKo.WAPI
                     var _ID = response.Content.ReadAsAsync<T>().Result;
                     ID = _ID;
                 }
+
             }
             catch (HttpRequestException e)
             {
@@ -152,10 +153,10 @@ namespace LibKo.WAPI
         }
 
         public static T Post<T, S>(String URI, S s)
-            where T: new()
-            where S: new()
+            where S : new()
+            where T : new()
         {
-            var ID = new T();
+            T ID = new T();
             try
             {
                 var url = URI;
@@ -166,6 +167,7 @@ namespace LibKo.WAPI
                     var _ID = response.Content.ReadAsAsync<T>().Result;
                     ID = _ID;
                 }
+
             }
             catch (HttpRequestException e)
             {
@@ -175,10 +177,10 @@ namespace LibKo.WAPI
         }
 
         public static T Post<T, S>(S s, String URI)
-            where T: new()
-            where S: new()
+            where S : new()
+            where T : new()
         {
-            var ID = new T();
+            T ID = new T();
             try
             {
                 var url = s.GetType().Name + URI;
@@ -189,6 +191,7 @@ namespace LibKo.WAPI
                     var _ID = response.Content.ReadAsAsync<T>().Result;
                     ID = _ID;
                 }
+
             }
             catch (HttpRequestException e)
             {
@@ -198,15 +201,21 @@ namespace LibKo.WAPI
         }
 
         public static Boolean Post<S>(S s)
-            where S: new()
+            where S : new()
         {
-            var ID = false;
+            Boolean ID = false;
             try
             {
                 var url = s.GetType().Name;
                 var response = Settings.ClientProperties().PostAsJsonAsync(url, s).Result;
 
+                //if (response.IsSuccessStatusCode)
+                //{
+                //    var _ID = response.Content.ReadAsAsync<Boolean>().Result;
+                //    ID = _ID;
+                //}
                 ID = response.IsSuccessStatusCode;
+
             }
             catch (HttpRequestException e)
             {
@@ -215,15 +224,21 @@ namespace LibKo.WAPI
             return ID;
         }
         public static Boolean Post<S>(String URI, S s)
-            where S: new()
+       where S : new()
         {
-            var ID = false;
+            Boolean ID = false;
             try
             {
                 var url = URI;
                 var response = Settings.ClientProperties().PostAsJsonAsync(url, s).Result;
 
+                //if (response.IsSuccessStatusCode)
+                //{
+                //    var _ID = response.Content.ReadAsAsync<T>().Result;
+                //    ID = _ID;
+                //}
                 ID = response.IsSuccessStatusCode;
+
             }
             catch (HttpRequestException e)
             {
@@ -233,14 +248,19 @@ namespace LibKo.WAPI
         }
 
         public static Boolean Post<S>(S s, String URI)
-            where S: new()
+            where S : new()
         {
-            var ID = false;
+            Boolean ID = false;
             try
             {
                 var url = s.GetType().Name + URI;
                 var response = Settings.ClientProperties().PostAsJsonAsync(url, s).Result;
 
+                //if (response.IsSuccessStatusCode)
+                //{
+                //    var _ID = response.Content.ReadAsAsync<T>().Result;
+                //    ID = _ID;
+                //}
                 ID = response.IsSuccessStatusCode;
             }
             catch (HttpRequestException e)
@@ -249,12 +269,14 @@ namespace LibKo.WAPI
             }
             return ID;
         }
+        #endregion
 
+        #region Put Methods
         public static T Put<T, S>(S s)
-            where T: new()
-            where S: new()
+            where S : new()
+            where T : new()
         {
-            var ID = new T();
+            T ID = new T();
             try
             {
                 var url = s.GetType().Name;
@@ -274,10 +296,10 @@ namespace LibKo.WAPI
         }
 
         public static T Put<T, S>(String URI, S s)
-            where T: new()
-            where S: new()
+            where S : new()
+            where T : new()
         {
-            var ID = new T();
+            T ID = new T();
             try
             {
                 var url = URI;
@@ -297,10 +319,10 @@ namespace LibKo.WAPI
         }
 
         public static T Put<T, S>(S s, String URI)
-            where T: new()
-            where S: new()
+            where S : new()
+            where T : new()
         {
-            var ID = new T();
+            T ID = new T();
             try
             {
                 var url = s.GetType().Name + URI;
@@ -319,10 +341,12 @@ namespace LibKo.WAPI
             return ID;
         }
 
+        //
+
         public static Boolean Put<S>(S s)
-            where S: new()
+    where S : new()
         {
-            var ID = false;
+            Boolean ID = false;
             try
             {
                 var url = s.GetType().Name;
@@ -338,9 +362,9 @@ namespace LibKo.WAPI
         }
 
         public static Boolean Put<S>(S s, String URI)
-            where S: new()
+            where S : new()
         {
-            var ID = false;
+            Boolean ID = false;
             try
             {
                 var url = s.GetType().Name + URI;
@@ -356,9 +380,9 @@ namespace LibKo.WAPI
         }
 
         public static Boolean Put<S>(String URI, S s)
-            where S: new()
+            where S : new()
         {
-            var ID = false;
+            Boolean ID = false;
             try
             {
                 var url = URI;
@@ -372,13 +396,15 @@ namespace LibKo.WAPI
             }
             return ID;
         }
+        #endregion
 
-        public static S Delete<S>(String URI)
-            where S: new()
+        #region Delete Methods
+        public static S Delete<S>(String URI) where S : new()
         {
-            var s = new S();
+            S s = new S();
             try
             {
+
                 var url = URI;
                 var response = Settings.ClientProperties().DeleteAsync(url).Result;
 
@@ -395,7 +421,7 @@ namespace LibKo.WAPI
         }
         public static Boolean Delete(String URI)
         {
-            var s = false;
+            Boolean s = false;
             try
             {
                 var url = URI;
@@ -409,44 +435,41 @@ namespace LibKo.WAPI
             }
             return s;
         }
+        #endregion
 
+        #region Settings
         private static Boolean addToHistory(Object val)
         {
-            var flag = false;
+            Boolean flag = false;
             _History = (from x in _History
-                                                where x.GetType() != val.GetType()
-                                                select x).ToList();
+                        where x.GetType() != val.GetType()
+                        select x).ToList();
             History.Add(val);
             Count = History.Count;
             return flag;
         }
+        #endregion
+
+        #region Properties
 
         private static int count = 0;
 
         public static int Count
         {
-            get
-            {
-                return WAPI.count;
-            }
-            private set
-            {
-                WAPI.count = value;
-            }
+            get { return WAPI.count; }
+            private set { WAPI.count = value; }
         }
 
         private static List<Object> _History = new List<Object>();
 
         public static List<Object> History
         {
-            get
-            {
-                return WAPI._History;
-            }
-            private set
-            {
-                WAPI._History = value;
-            }
+            get { return WAPI._History; }
+            private set { WAPI._History = value; }
         }
+
+
+
+        #endregion
     }
 }
