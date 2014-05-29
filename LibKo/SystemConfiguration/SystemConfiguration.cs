@@ -1,5 +1,5 @@
 ﻿using System.Configuration;
-using System.Linq;;
+using System.Linq;
 namespace LibKo.SystemConfiguration
 {
     public class SystemConfiguration
