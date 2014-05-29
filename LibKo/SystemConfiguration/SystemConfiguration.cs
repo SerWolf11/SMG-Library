@@ -1,20 +1,20 @@
 ﻿using System.Configuration;
-using System.Linq;;
+using System.Linq;
+
+;
 namespace LibKo.SystemConfiguration
 {
     public class SystemConfiguration
     {
-
         private void Configuration()
         {
-            System.Configuration.Configuration config =
+            var config =
                     System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(
                         new System.Configuration.ExeConfigurationFileMap()
-                        {
-                            ExeConfigFilename = webconfigFile
-                        },
+            { ExeConfigFilename = webconfigFile
+            },
             System.Configuration.ConfigurationUserLevel.None);
-            string oldValue = config.AppSettings.Settings["SomeKey"].Value;
+            var oldValue = config.AppSettings.Settings["SomeKey"].Value;
             config.AppSettings.Settings["SomeKey"].Value = "NewValue";
             config.Save(ConfigurationSaveMode.Modified);
         }

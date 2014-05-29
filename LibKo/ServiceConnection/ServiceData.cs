@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Net.Http;
-using System.Net.Http.Headers;
 
 namespace LibKo.ServiceConnection
 {
@@ -12,24 +10,42 @@ namespace LibKo.ServiceConnection
 
         public static HttpClient ClientProperties
         {
-            get { return ServiceData._clientProperties; }
-            set { ServiceData._clientProperties = value; }
+            get
+            {
+                return ServiceData._clientProperties;
+            }
+            set
+            {
+                ServiceData._clientProperties = value;
+            }
         }
 
         private static List<HttpClient> _ClientList = new List<HttpClient>();
 
         public static List<HttpClient> ClientList
         {
-            get { return ServiceData._ClientList; }
-            set { ServiceData._ClientList = value; }
+            get
+            {
+                return ServiceData._ClientList;
+            }
+            set
+            {
+                ServiceData._ClientList = value;
+            }
         }
 
         private static HttpClient _client = new HttpClient();
 
         public static HttpClient Client
         {
-            get { return ServiceData._client; }
-            set { ServiceData._client = value; }
+            get
+            {
+                return ServiceData._client;
+            }
+            set
+            {
+                ServiceData._client = value;
+            }
         }
     }
 }

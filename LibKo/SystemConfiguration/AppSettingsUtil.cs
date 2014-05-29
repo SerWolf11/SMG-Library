@@ -21,9 +21,11 @@ namespace LibKo.SystemConfiguration
         /// <returns>The value in the config file.</returns>
         public static string GetString(string keyName)
         {
-            string str = ConfigurationManager.AppSettings[keyName];
+            var str = ConfigurationManager.AppSettings[keyName];
             if (str == null || str.Trim().Length == 0)
+            {
                 throw new ConfigurationErrorsException("No application setting available for key: " + keyName);
+            }
             return str;
         }
 
@@ -36,9 +38,11 @@ namespace LibKo.SystemConfiguration
         /// <returns>The value in the config file, or <paramref name="defaultValue"/> if the config value does not exist or is blank.</returns>
         public static string GetString(string keyName, string defaultValue)
         {
-            string str = ConfigurationManager.AppSettings[keyName];
+            var str = ConfigurationManager.AppSettings[keyName];
             if (str == null || str.Trim().Length == 0)
+            {
                 return defaultValue;
+            }
             return str;
         }
 
@@ -50,11 +54,11 @@ namespace LibKo.SystemConfiguration
         /// <exception cref="ConfigurationErrorsException">The value is not specified or cannot be parsed as in int.</exception>
         public static int GetInt(string keyName)
         {
-            string str = GetString(keyName);
+            var str = GetString(keyName);
             int value;
             if (!int.TryParse(str, out value))
             {
-                string message = string.Format("Unable to parse app setting value for {0} as an int: {1}", keyName, str);
+                var message = string.Format("Unable to parse app setting value for {0} as an int: {1}", keyName, str);
                 throw new ConfigurationErrorsException(message);
             }
             return value;
@@ -69,10 +73,12 @@ namespace LibKo.SystemConfiguration
         /// <returns>The value in the config file as an int, or <paramref name="defaultValue"/> if the config value does not exist or is blank.</returns>
         public static int GetInt(string keyName, int defaultValue)
         {
-            string str = ConfigurationManager.AppSettings[keyName];
+            var str = ConfigurationManager.AppSettings[keyName];
             int value;
             if (!int.TryParse(str, out value))
+            {
                 value = defaultValue;
+            }
             return value;
         }
 
@@ -84,11 +90,11 @@ namespace LibKo.SystemConfiguration
         /// <exception cref="ConfigurationErrorsException">The value is not specified or cannot be parsed as in int.</exception>
         public static short GetShort(string keyName)
         {
-            string str = GetString(keyName);
+            var str = GetString(keyName);
             short value;
             if (!short.TryParse(str, out value))
             {
-                string message = string.Format("Unable to parse app setting value for {0} as an short: {1}", keyName, str);
+                var message = string.Format("Unable to parse app setting value for {0} as an short: {1}", keyName, str);
                 throw new ConfigurationErrorsException(message);
             }
             return value;
@@ -103,26 +109,28 @@ namespace LibKo.SystemConfiguration
         /// <returns>The value in the config file as an short, or <paramref name="defaultValue"/> if the config value does not exist or is blank.</returns>
         public static short GetShort(string keyName, short defaultValue)
         {
-            string str = ConfigurationManager.AppSettings[keyName];
+            var str = ConfigurationManager.AppSettings[keyName];
             short value;
             if (!short.TryParse(str, out value))
+            {
                 value = defaultValue;
+            }
             return value;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="keyName">The name of the key, as specified in application config.</param>
         /// <returns>The value in the config file as a double.</returns>
         /// <exception cref="ConfigurationErrorsException">The value is not specified or cannot be parsed as a double.</exception>
         public static double GetDouble(string keyName)
         {
-            string str = GetString(keyName);
+            var str = GetString(keyName);
             double value;
             if (!double.TryParse(str, out value))
             {
-                string message = string.Format("Unable to parse app setting value for {0} as a double: {1}", keyName, str);
+                var message = string.Format("Unable to parse app setting value for {0} as a double: {1}", keyName, str);
                 throw new ConfigurationErrorsException(message);
             }
             return value;
@@ -137,26 +145,28 @@ namespace LibKo.SystemConfiguration
         /// <returns>The value in the config file as a double, or <paramref name="defaultValue"/> if the config value does not exist or is blank.</returns>
         public static double GetDouble(string keyName, double defaultValue)
         {
-            string str = ConfigurationManager.AppSettings[keyName];
+            var str = ConfigurationManager.AppSettings[keyName];
             double value;
             if (!double.TryParse(str, out value))
+            {
                 value = defaultValue;
+            }
             return value;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="keyName">The name of the key, as specified in application config.</param>
         /// <returns>The value in the config file as a bool.</returns>
         /// <exception cref="ConfigurationErrorsException">The value is not specified or cannot be parsed as a bool.</exception>
         public static bool GetBool(string keyName)
         {
-            string str = GetString(keyName);
+            var str = GetString(keyName);
             bool result;
             if (!bool.TryParse(str, out result))
             {
-                string message = string.Format("Unable to parse app setting value for {0} as a bool: {1}", keyName, str);
+                var message = string.Format("Unable to parse app setting value for {0} as a bool: {1}", keyName, str);
                 throw new ConfigurationErrorsException(message);
             }
             return result;
@@ -170,10 +180,12 @@ namespace LibKo.SystemConfiguration
         /// <returns>The value in the config file as a bool, or <paramref name="defaultValue"/> if the config value does not exist or is blank.</returns>
         public static bool GetBool(string keyName, bool defaultValue)
         {
-            string str = ConfigurationManager.AppSettings[keyName];
+            var str = ConfigurationManager.AppSettings[keyName];
             bool result;
             if (bool.TryParse(str, out result))
+            {
                 return result;
+            }
             return defaultValue;
         }
 
@@ -185,12 +197,12 @@ namespace LibKo.SystemConfiguration
         /// <returns>True if the key exists, otherwise false.</returns>
         public static bool TryGetBool(string keyName, out bool value)
         {
-            string str = ConfigurationManager.AppSettings[keyName];
+            var str = ConfigurationManager.AppSettings[keyName];
             return bool.TryParse(str, out value);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="keyName">The name of the key, as specified in application config.</param>
         /// <returns>The value in the config file as a TimeSpan.</returns>
@@ -212,7 +224,7 @@ namespace LibKo.SystemConfiguration
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="keyName">The name of the key, as specified in application config.</param>
         /// <returns>The value in the config file as a TimeSpan.</returns>
@@ -235,7 +247,7 @@ namespace LibKo.SystemConfiguration
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="keyName">The name of the key, as specified in application config.</param>
         /// <returns>The value in the config file as a TimeSpan.</returns>
@@ -258,13 +270,13 @@ namespace LibKo.SystemConfiguration
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="keyName">The name of the key, as specified in application config.</param>
         /// <returns>The CSV value in the config file, split into its components and returned as a string array.</returns>
         public static string[] GetCsv(string keyName)
         {
-            string str = GetString(keyName);
+            var str = GetString(keyName);
             return str.Split(',');
         }
 
@@ -277,10 +289,12 @@ namespace LibKo.SystemConfiguration
         /// <exception cref="ConfigurationErrorsException">The key is not present in appSettings, or the path does not exist.</exception>
         public static string GetExistingFilePath(string keyName)
         {
-            string path = GetString(keyName);
+            var path = GetString(keyName);
             if (!File.Exists(path))
+            {
                 throw new ConfigurationErrorsException(
                     string.Format("Configuration key '{0}' holds a non-existant file path: {1}", keyName, path));
+            }
             return path;
         }
 
@@ -290,21 +304,6 @@ namespace LibKo.SystemConfiguration
         /// <param name="keyName">The name of the key, as specified in application config.</param>
         /// <param name="defaultValue"></param>
         /// <returns>The value in the config file as a Color, or <paramref name="defaultValue"/> if the config value does not exist or is blank, or it's not valid Color name.</returns>
-        /*public static Color GetColor(string keyName, Color defaultValue)
-         {
-             string str = ConfigurationManager.AppSettings[keyName];
-
-             Color color = defaultValue;
-             if (str != null)
-             {
-                 color = Color.FromName(str);
-                 if (color.ToArgb() == 0)
-                     return defaultValue;
-             }
-
-             return color;
-         }*/
-
         /// <summary>
         /// Gets the enum value from the config document having the specified key.  The enum value is compared in a case-insensitive fashion.
         /// </summary>
@@ -315,14 +314,14 @@ namespace LibKo.SystemConfiguration
         /// <exception cref="ConfigurationErrorsException">The config value could not be parsed as a value of enum <typeparamref name="T"/></exception>
         public static T GetEnum<T>(string keyName)
         {
-            string value = GetString(keyName);
+            var value = GetString(keyName);
             try
             {
                 return (T)Enum.Parse(typeof(T), value, true);
             }
             catch (ArgumentException ex)
             {
-                string message = string.Format("Configuration key '{0}' has value '{1}' that could not be parsed as a member of the {2} enum type.", keyName, value, typeof(T).Name);
+                var message = string.Format("Configuration key '{0}' has value '{1}' that could not be parsed as a member of the {2} enum type.", keyName, value, typeof(T).Name);
                 throw new ConfigurationErrorsException(message, ex);
             }
         }
@@ -346,17 +345,11 @@ namespace LibKo.SystemConfiguration
         /// <exception cref="ConfigurationErrorsException">No connection string section was found or no entry present with specified key.</exception>
         public static string GetConnectionString(string keyName)
         {
-            /*
-            <configuration>
-                <connectionStrings>
-                    <add name="NAV" connectionString="Data Source=SERVER;Initial Catalog=DATABASE;User ID=USER;Password=PASSWORD"/>
-                </connectionStrings>
-            </configuration>
-            */
-
-            ConnectionStringSettings connStr = ConfigurationManager.ConnectionStrings[keyName];
+            var connStr = ConfigurationManager.ConnectionStrings[keyName];
             if (connStr == null)
+            {
                 throw new ConfigurationErrorsException("No connection string found for key: " + keyName);
+            }
             return connStr.ConnectionString;
         }
 

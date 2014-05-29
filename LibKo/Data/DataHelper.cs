@@ -3,25 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using System.ComponentModel;
+
 namespace LibKo.Data
 {
     public class DataHelper
     {
-        public static DataTable ToDataTable<T>(List<T> data) where T : new()
+        public static DataTable ToDataTable<T>(List<T> data)
+            where T: new()
         {
-            PropertyDescriptorCollection props =
+            var props =
                 TypeDescriptor.GetProperties(typeof(T));
-            DataTable table = new DataTable();
-            for (int i = 0; i < props.Count; i++)
+            var table = new DataTable();
+            for (var i = 0; i < props.Count; i++)
             {
-                PropertyDescriptor prop = props[i];
+                var prop = props[i];
                 table.Columns.Add(prop.Name, prop.PropertyType);
             }
-            object[] values = new object[props.Count];
+            var values = new object[props.Count];
 
             foreach (T item in data)
             {
-                for (int i = 0; i < values.Length; i++)
+                for (var i = 0; i < values.Length; i++)
                 {
                     values[i] = props[i].GetValue(item);
                 }
