@@ -10,9 +10,6 @@ namespace LibKo.WAPI
 
         public static List<T> GetList<T>(String URI) where T : new()
         {
-
-            HttpClient s = new HttpClient();
-
            List<T> Lista = new List<T>();
 
             var url = URI;
@@ -125,6 +122,126 @@ namespace LibKo.WAPI
 
             return Lista;
         }
+
+        #region ClientePersonalizado
+        public static List<T> GetList<T>(String URI, HttpClient client) where T : new()
+        {
+            List<T> Lista = new List<T>();
+
+            var url = URI;
+            //HttpResponseMessage response = ServiceData.ClientProperties.GetAsync(url).Result;
+            HttpResponseMessage response = client.GetAsync(url).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                var lista = response.Content.ReadAsAsync<IEnumerable<T>>().Result;
+                Lista = lista.ToList();
+            }
+
+            return Lista;
+        }
+
+        public static T Get<T>(String URI, HttpClient client) where T : new()
+        {
+            T Lista = new T();
+
+            var url = URI;
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                var lista = response.Content.ReadAsAsync<T>().Result;
+                Lista = lista;
+            }
+
+            return Lista;
+        }
+
+        public static T Get<T>(String URI, Boolean History, HttpClient client) where T : new()
+        {
+            T Lista = new T();
+            Boolean flag = false;
+
+            if (History)
+            {
+                foreach (var item in _History)
+                {
+                    if (Lista.GetType() == item.GetType())
+                    {
+                        flag = true;
+                    }
+                }
+            }
+
+            if (!flag)
+            {
+                var url = URI;
+                HttpResponseMessage response = client.GetAsync(url).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var lista = response.Content.ReadAsAsync<T>().Result;
+                    Lista = lista;
+                }
+                if (History)
+                {
+                    addToHistory(Lista);
+                }
+            }
+            else if (History)
+            {
+                foreach (var item in _History)
+                {
+                    if (Lista.GetType() == item.GetType())
+                    {
+                        try
+                        {
+                            Lista = (T)item;
+                        }
+                        catch (Exception)
+                        {
+                            var url = URI;
+                            HttpResponseMessage response = client.GetAsync(url).Result;
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                var lista = response.Content.ReadAsAsync<T>().Result;
+                                Lista = lista;
+                            }
+                            if (History)
+                            {
+                                addToHistory(Lista);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Lista;
+        }
+
+        public static T Get<T>( HttpClient client, String ServiceName, params Parameters[] parameters) where T : new()
+        {
+            T Lista = new T();
+
+            var url = ServiceName + "?";
+
+            foreach (var item in parameters)
+            {
+                url = String.Format("{0}{1}={2}&", url, item.Name, item.ValueString);
+            }
+            url = url.Substring(0, url.Length - 1);
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                var lista = response.Content.ReadAsAsync<T>().Result;
+                Lista = lista;
+            }
+
+            return Lista;
+        }
+
+        #endregion
 
         #endregion
 
