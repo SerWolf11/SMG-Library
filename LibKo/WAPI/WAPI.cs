@@ -295,29 +295,29 @@ namespace LibKo.WAPI
             return ID;
         }
 
-        public static T Post<T, S>(S s, String URI)
-            where S : new()
-            where T : new()
-        {
-            T ID = new T();
-            try
-            {
-                var url = s.GetType().Name + URI;
-                var response = ServiceData.ClientProperties.PostAsJsonAsync(url, s).Result;
+        //public static T Post<T, S>(S s, String URI)
+        //    where S : new()
+        //    where T : new()
+        //{
+        //    T ID = new T();
+        //    try
+        //    {
+        //        var url = s.GetType().Name + URI;
+        //        var response = ServiceData.ClientProperties.PostAsJsonAsync(url, s).Result;
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var _ID = response.Content.ReadAsAsync<T>().Result;
-                    ID = _ID;
-                }
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            var _ID = response.Content.ReadAsAsync<T>().Result;
+        //            ID = _ID;
+        //        }
 
-            }
-            catch (HttpRequestException e)
-            {
-                ID = new T();
-            }
-            return ID;
-        }
+        //    }
+        //    catch (HttpRequestException e)
+        //    {
+        //        ID = new T();
+        //    }
+        //    return ID;
+        //}
 
         public static Boolean Post<S>(S s)
             where S : new()
@@ -366,28 +366,176 @@ namespace LibKo.WAPI
             return ID;
         }
 
-        public static Boolean Post<S>(S s, String URI)
+        //public static Boolean Post<S>(S s, String URI)
+        //    where S : new()
+        //{
+        //    Boolean ID = false;
+        //    try
+        //    {
+        //        var url = s.GetType().Name + URI;
+        //        var response = ServiceData.ClientProperties.PostAsJsonAsync(url, s).Result;
+
+        //        //if (response.IsSuccessStatusCode)
+        //        //{
+        //        //    var _ID = response.Content.ReadAsAsync<T>().Result;
+        //        //    ID = _ID;
+        //        //}
+        //        ID = response.IsSuccessStatusCode;
+        //    }
+        //    catch (HttpRequestException e)
+        //    {
+        //        ID = false;
+        //    }
+        //    return ID;
+        //}
+
+        #region Cliente Presonalizado
+        public static T Post<T, S>(S s, HttpClient client)
             where S : new()
+            where T : new()
         {
-            Boolean ID = false;
+            T ID = new T();
             try
             {
-                var url = s.GetType().Name + URI;
-                var response = ServiceData.ClientProperties.PostAsJsonAsync(url, s).Result;
+                var url = s.GetType().Name;
+                var response = client.PostAsJsonAsync(url, s).Result;
 
-                //if (response.IsSuccessStatusCode)
-                //{
-                //    var _ID = response.Content.ReadAsAsync<T>().Result;
-                //    ID = _ID;
-                //}
-                ID = response.IsSuccessStatusCode;
+                if (response.IsSuccessStatusCode)
+                {
+                    var _ID = response.Content.ReadAsAsync<T>().Result;
+                    ID = _ID;
+                }
+
             }
             catch (HttpRequestException e)
             {
-                ID = false;
+                ID = new T();
             }
             return ID;
         }
+
+                public static T Post<T, S>(String URI, S s, HttpClient client)
+                    where S : new()
+                    where T : new()
+                {
+                    T ID = new T();
+                    try
+                    {
+                        var url = URI;
+                        var response = client.PostAsJsonAsync(url, s).Result;
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var _ID = response.Content.ReadAsAsync<T>().Result;
+                            ID = _ID;
+                        }
+
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        ID = new T();
+                    }
+                    return ID;
+                }
+
+                public static Boolean Post<S>(String URI, S s, HttpClient client)
+                     where S : new()
+                {
+                    Boolean ID = false;
+                    try
+                    {
+                        var url = URI;
+                        var response = client.PostAsJsonAsync(url, s).Result;
+
+                        //if (response.IsSuccessStatusCode)
+                        //{
+                        //    var _ID = response.Content.ReadAsAsync<T>().Result;
+                        //    ID = _ID;
+                        //}
+                        ID = response.IsSuccessStatusCode;
+
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        ID = false;
+                    }
+                    return ID;
+                }
+
+                //public static T Post<T, S>(S s, String URI, HttpClient client)
+                //    where S : new()
+                //    where T : new()
+                //{
+                //    T ID = new T();
+                //    try
+                //    {
+                //        var url = s.GetType().Name + URI;
+                //        var response = client.PostAsJsonAsync(url, s).Result;
+
+                //        if (response.IsSuccessStatusCode)
+                //        {
+                //            var _ID = response.Content.ReadAsAsync<T>().Result;
+                //            ID = _ID;
+                //        }
+
+                //    }
+                //    catch (HttpRequestException e)
+                //    {
+                //        ID = new T();
+                //    }
+                //    return ID;
+                //}
+
+                //public static Boolean Post<S>(S s, HttpClient client)
+                //    where S : new()
+                //{
+                //    Boolean ID = false;
+                //    try
+                //    {
+                //        var url = s.GetType().Name;
+                //        var response = client.PostAsJsonAsync(url, s).Result;
+
+                //        //if (response.IsSuccessStatusCode)
+                //        //{
+                //        //    var _ID = response.Content.ReadAsAsync<Boolean>().Result;
+                //        //    ID = _ID;
+                //        //}
+                //        ID = response.IsSuccessStatusCode;
+
+                //    }
+                //    catch (HttpRequestException e)
+                //    {
+                //        ID = false;
+                //    }
+                //    return ID;
+                //}
+              
+
+                //public static Boolean Post<S>(S s, String URI, HttpClient client)
+                //    where S : new()
+                //{
+                //    Boolean ID = false;
+                //    try
+                //    {
+                //        var url = s.GetType().Name + URI;
+                //        var response = client.PostAsJsonAsync(url, s).Result;
+
+                //        //if (response.IsSuccessStatusCode)
+                //        //{
+                //        //    var _ID = response.Content.ReadAsAsync<T>().Result;
+                //        //    ID = _ID;
+                //        //}
+                //        ID = response.IsSuccessStatusCode;
+                //    }
+                //    catch (HttpRequestException e)
+                //    {
+                //        ID = false;
+                //    }
+                //    return ID;
+                //}
+
+
+        #endregion
         #endregion
 
         #region Put Methods
@@ -437,56 +585,13 @@ namespace LibKo.WAPI
             return ID;
         }
 
-        public static T Put<T, S>(S s, String URI)
-            where S : new()
-            where T : new()
-        {
-            T ID = new T();
-            try
-            {
-                var url = s.GetType().Name + URI;
-                var response = ServiceData.ClientProperties.PutAsJsonAsync(url, s).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var _ID = response.Content.ReadAsAsync<T>().Result;
-                    ID = _ID;
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                ID = new T();
-            }
-            return ID;
-        }
-
-        //
-
         public static Boolean Put<S>(S s)
-    where S : new()
+            where S : new()
         {
             Boolean ID = false;
             try
             {
                 var url = s.GetType().Name;
-                var response = ServiceData.ClientProperties.PutAsJsonAsync(url, s).Result;
-
-                ID = response.IsSuccessStatusCode;
-            }
-            catch (HttpRequestException)
-            {
-                ID = false;
-            }
-            return ID;
-        }
-
-        public static Boolean Put<S>(S s, String URI)
-            where S : new()
-        {
-            Boolean ID = false;
-            try
-            {
-                var url = s.GetType().Name + URI;
                 var response = ServiceData.ClientProperties.PutAsJsonAsync(url, s).Result;
 
                 ID = response.IsSuccessStatusCode;
@@ -515,6 +620,92 @@ namespace LibKo.WAPI
             }
             return ID;
         }
+
+        #region cliente personalizado
+
+        public static T Put<T, S>(S s, HttpClient client)
+            where S : new()
+            where T : new()
+        {
+            T ID = new T();
+            try
+            {
+                var url = s.GetType().Name;
+                var response = client.PutAsJsonAsync(url, s).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var _ID = response.Content.ReadAsAsync<T>().Result;
+                    ID = _ID;
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                ID = new T();
+            }
+            return ID;
+        }
+
+        public static T Put<T, S>(String URI, S s, HttpClient client)
+            where S : new()
+            where T : new()
+        {
+            T ID = new T();
+            try
+            {
+                var url = URI;
+                var response = client.PutAsJsonAsync(url, s).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var _ID = response.Content.ReadAsAsync<T>().Result;
+                    ID = _ID;
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                ID = new T();
+            }
+            return ID;
+        }
+
+        public static Boolean Put<S>(S s, HttpClient client)
+            where S : new()
+        {
+            Boolean ID = false;
+            try
+            {
+                var url = s.GetType().Name;
+                var response = client.PutAsJsonAsync(url, s).Result;
+
+                ID = response.IsSuccessStatusCode;
+            }
+            catch (HttpRequestException)
+            {
+                ID = false;
+            }
+            return ID;
+        }
+
+        public static Boolean Put<S>(String URI, S s, HttpClient client)
+            where S : new()
+        {
+            Boolean ID = false;
+            try
+            {
+                var url = URI;
+                var response = client.PutAsJsonAsync(url, s).Result;
+
+                ID = response.IsSuccessStatusCode;
+            }
+            catch (HttpRequestException)
+            {
+                ID = false;
+            }
+            return ID;
+        }
+
+        #endregion
         #endregion
 
         #region Delete Methods
@@ -554,6 +745,45 @@ namespace LibKo.WAPI
             }
             return s;
         }
+
+        #region  cliente personalizado
+         public static S Delete<S>(String URI, HttpClient client) where S : new()
+        {
+            S s = new S();
+            try
+            {
+
+                var url = URI;
+                var response = client.DeleteAsync(url).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    s = response.Content.ReadAsAsync<S>().Result;
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                s = new S();
+            }
+            return s;
+        }
+        public static Boolean Delete(String URI, HttpClient client)
+        {
+            Boolean s = false;
+            try
+            {
+                var url = URI;
+                var response = ServiceData.ClientProperties.DeleteAsync(url).Result;
+
+                s = response.IsSuccessStatusCode;
+            }
+            catch (HttpRequestException e)
+            {
+                s = false;
+            }
+            return s;
+        }
+        #endregion
         #endregion
 
         #region Settings
