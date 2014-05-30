@@ -13,6 +13,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
+using System.Data;
+
+using LibKo.WAPI;
+
 namespace ADM
 {
     /// <summary>
@@ -20,9 +24,41 @@ namespace ADM
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        private DataSet s = new DataSet();
+        private List<Object> j = new List<object>();
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            //j=WAPI.Get<List<Object>>("Requisicion");
+
+            for (int i = 0; i < 11; i++)
+            {
+                j.Add(new kol() { f = i, lo = "ee " + i, Ko = DateTime.Today });
+            }
+            
+            y.ItemsSource = j;
+            //y.DataContext = j;
+
+           
+        }
+
+        class kol
+        {
+
+            public int f { get; set; }
+            public string lo { get; set; }
+            private DateTime ko=DateTime.Now;
+
+            public DateTime Ko
+            {
+                get { return ko=DateTime.Now; }
+                set { ko = value; }
+            }
+            
         }
     }
 }
