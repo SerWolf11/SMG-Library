@@ -10,7 +10,10 @@ namespace LibKo.WAPI
 
         public static List<T> GetList<T>(String URI) where T : new()
         {
-            List<T> Lista = new List<T>();
+
+            HttpClient s = new HttpClient();
+
+           List<T> Lista = new List<T>();
 
             var url = URI;
             //HttpResponseMessage response = ServiceData.ClientProperties.GetAsync(url).Result;

@@ -60,14 +60,53 @@ namespace LibKo.WAPI
             return client;
         }
 
-        public static HttpClient ClientIP(String IP)
+        public static HttpClient ClientProperties(this HttpClient client, String Setting)
         {
-            HttpClient client = new HttpClient();
+             client = new HttpClient();
+
+            try
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings[Setting]);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(string.Format("{0}:{1}", "Farmacia", "12345679890"))));
+                client.MaxResponseContentBufferSize = 1024 * 1024 * 1024;
+                client.Timeout = TimeSpan.FromMinutes(30.00);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return client;
+        }
+
+        public static HttpClient ClientIP( this HttpClient client, String IP)
+        {
+             client = new HttpClient();
 
             try
             {
                 //client.BaseAddress = new Uri(ConfigurationManager.AppSettings[Setting]);
                 client.BaseAddress = new Uri(IP+"API");
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(string.Format("{0}:{1}", "Farmacia", "12345679890"))));
+                client.MaxResponseContentBufferSize = 1024 * 1024 * 1024;
+                client.Timeout = TimeSpan.FromMinutes(30.00);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return client;
+        }
+
+        public static HttpClient ClientIP(String IP)
+        {
+             HttpClient client = new HttpClient();
+
+            try
+            {
+                //client.BaseAddress = new Uri(ConfigurationManager.AppSettings[Setting]);
+                client.BaseAddress = new Uri(IP + "API");
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 //client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(string.Format("{0}:{1}", "Farmacia", "12345679890"))));
                 client.MaxResponseContentBufferSize = 1024 * 1024 * 1024;
