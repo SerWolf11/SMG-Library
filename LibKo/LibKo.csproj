@@ -54,8 +54,8 @@
     <Compile Include="Data\StringUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflect\DynamicClass.cs" />
-    <Compile Include="ServiceConnection\ServiceData.cs" />
-    <Compile Include="ServiceConnection\Settings.cs" />
+    <Compile Include="WAPI\ServiceData.cs" />
+    <Compile Include="WAPI\Settings.cs" />
     <Compile Include="SystemConfiguration\AppSettingsUtil.cs" />
     <Compile Include="SystemConfiguration\SystemConfiguration.cs" />
     <Compile Include="Utilties\Enumerables.cs" />
