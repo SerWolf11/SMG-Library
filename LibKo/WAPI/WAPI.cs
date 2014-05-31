@@ -820,7 +820,5 @@ namespace LibKo.WAPI
 
 
         #endregion
-
-
     }
 }
