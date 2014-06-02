@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace MDOP.ViewModel
 {
-    class Class1
+    public class HomeViewModel
     {
+        public String op { get; set; }
+
+        public HomeViewModel()
+        {
+            op = "HKJKKK";
+        }
     }
 }
