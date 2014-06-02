@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 
 namespace LibKo.WAPI
 {
-    public class ServiceData
+    public static class ServiceData
     {
         private static HttpClient _clientProperties = Settings.ClientProperties();
 

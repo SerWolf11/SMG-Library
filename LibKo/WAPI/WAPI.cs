@@ -31,8 +31,8 @@ namespace LibKo.WAPI
             {
                 var url = URI;
                 //HttpResponseMessage response = ServiceData.ClientProperties.GetAsync(url).Result;
-                HttpResponseMessage response = Settings.ClientProperties().GetAsync(url).Result;
-
+                var x = Settings.ClientProperties().GetAsync(url).Result;
+                HttpResponseMessage response = x;
                 if (response.IsSuccessStatusCode)
                 {
                     var lista = response.Content.ReadAsAsync<T>().Result;

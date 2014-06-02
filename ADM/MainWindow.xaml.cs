@@ -25,7 +25,7 @@ namespace ADM
     public partial class MainWindow : MetroWindow
     {
       
-        private List<Object> j = new List<object>();
+        private List<Object> j = new List<Object>();
         public MainWindow()
         {
             InitializeComponent();
@@ -44,7 +44,8 @@ namespace ADM
             //y.DataContext = j;
 
             j = WAPI.Get<List<Object>>("Caja?IDFarmacia=1");
-           
+            y.DataSource = j;
+            o.ItemsSource = j;
         }
 
         class kol

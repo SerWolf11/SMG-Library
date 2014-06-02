@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Custom="http://infragistics.com/DataPresenter" x:Class="MDOP.View.CajaView" 
              mc:Ignorable="d" 
-             d:DesignHeight="318" d:DesignWidth="446"
+             d:DesignHeight="300" d:DesignWidth="483"
               DataContext="{Binding Caja, Source={StaticResource Locator}}">
-    <Grid Margin="0,0,-238,-53">
+    <Grid Margin="0,0,10,10">
         <GroupBox Header="Cajas" Margin="10" BorderBrush="Black">
             <Grid>
 

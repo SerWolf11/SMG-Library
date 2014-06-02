@@ -24,8 +24,9 @@ namespace LibKo.WAPI
 
         public static HttpClient ClientProperties()
         {
-            HttpClient client = new HttpClient();
-
+            HttpClientHandler httpClientHandler = new HttpClientHandler();
+            httpClientHandler.MaxRequestContentBufferSize = 10 * 1 * 1;
+            HttpClient client = new HttpClient(httpClientHandler);
             try
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["WebApiURL"]);

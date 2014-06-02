@@ -5,41 +5,41 @@
 	Height="616"
 	Width="760"
 	Loaded="MetroWindow_Loaded">
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition
 				Height="361*" />
-			<RowDefinition
+            <RowDefinition
 				Height="225*" />
-		</Grid.RowDefinitions>
-		<controls:MetroAnimatedTabControl
+        </Grid.RowDefinitions>
+        <controls:MetroAnimatedTabControl
 			x:Name="Hola"
 			Height="354"
 			VerticalAlignment="Bottom"
 			Margin="0,0,0,2">
-			<TabItem
+            <TabItem
 				x:Name="h"
 				Header="hoa">
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
 							Width="0.0246666666666667*" />
-						<ColumnDefinition
+                        <ColumnDefinition
 							Width="0.975333333333333*" />
-					</Grid.ColumnDefinitions>
-				</Grid>
-			</TabItem>
-			<TabItem
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </TabItem>
+            <TabItem
 				Header="kl">
-				<Grid
+                <Grid
 					Height="279"
 					VerticalAlignment="Top"
 					Margin="0,0,42,0">
-					<DataGrid
-						x:Name="y"
-						Margin="0,0,27,19" />
-				</Grid>
-			</TabItem>
-		</controls:MetroAnimatedTabControl>
-	</Grid>
+                    <Custom:XamDataGrid HorizontalAlignment="Left" Height="203" Margin="47,10,0,0" VerticalAlignment="Top" Width="578" Name="y"/>
+
+                </Grid>
+            </TabItem>
+        </controls:MetroAnimatedTabControl>
+        <DataGrid HorizontalAlignment="Left" Height="116" Margin="10,58,0,0" Grid.Row="1" VerticalAlignment="Top" Width="403" Name="o"/>
+    </Grid>
 </controls:MetroWindow>
