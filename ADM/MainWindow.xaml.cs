@@ -34,8 +34,7 @@ namespace ADM
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
 
-            j=WAPI.Get<List<Object>>("Requisicion");
-
+      
             for (int i = 0; i < 11; i++)
             {
                 j.Add(new kol() { f = i, lo = "ee " + i, Ko = DateTime.Today });
