@@ -24,7 +24,7 @@ namespace ADM
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private DataSet s = new DataSet();
+      
         private List<Object> j = new List<object>();
         public MainWindow()
         {
@@ -35,14 +35,15 @@ namespace ADM
         {
 
       
-            for (int i = 0; i < 11; i++)
-            {
-                j.Add(new kol() { f = i, lo = "ee " + i, Ko = DateTime.Today });
-            }
+            //for (int i = 0; i < 11; i++)
+            //{
+            //    j.Add(new kol() { f = i, lo = "ee " + i, Ko = DateTime.Today });
+            //}
             
-            y.ItemsSource = j;
+            //y.ItemsSource = j;
             //y.DataContext = j;
 
+            j = WAPI.Get<List<Object>>("Caja?IDFarmacia=1");
            
         }
 

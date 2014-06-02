@@ -27,13 +27,22 @@ namespace LibKo.WAPI
         {
             T Lista = new T();
 
-            var url = URI;
-            HttpResponseMessage response = ServiceData.ClientProperties.GetAsync(url).Result;
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var lista = response.Content.ReadAsAsync<T>().Result;
-                Lista = lista;
+                var url = URI;
+                //HttpResponseMessage response = ServiceData.ClientProperties.GetAsync(url).Result;
+                HttpResponseMessage response = Settings.ClientProperties().GetAsync(url).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var lista = response.Content.ReadAsAsync<T>().Result;
+                    Lista = lista;
+                }
+            }
+            catch (Exception)
+            {
+                
+                throw;
             }
 
             return Lista;

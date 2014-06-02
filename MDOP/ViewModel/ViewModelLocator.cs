@@ -31,7 +31,7 @@ namespace MDOP.ViewModel
 
             SimpleIoc.Default.Register<MainViewModel>();
 
-            SimpleIoc.Default.Register<HomeViewModel>();
+            SimpleIoc.Default.Register<CajaViewModel>();
         }
 
         /// <summary>
@@ -55,11 +55,11 @@ namespace MDOP.ViewModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
             "CA1822:MarkMembersAsStatic",
             Justification = "This non-static member is needed for data binding purposes.")]
-        public HomeViewModel Home
+        public CajaViewModel Caja
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<HomeViewModel>();
+                return ServiceLocator.Current.GetInstance<CajaViewModel>();
             }
         }
 

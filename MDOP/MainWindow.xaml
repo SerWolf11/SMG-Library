@@ -12,7 +12,7 @@
     <mui:ModernWindow.MenuLinkGroups>
         <mui:LinkGroup DisplayName="Test">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="PoKi" Source="/View/Home.xaml" />
+                <mui:Link DisplayName="PoKi" Source="/View/CajaView.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
     </mui:ModernWindow.MenuLinkGroups>

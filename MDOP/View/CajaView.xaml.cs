@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace MDOP.View
 {
     /// <summary>
-    /// Lógica de interacción para Home.xaml
+    /// Lógica de interacción para CajaView.xaml
     /// </summary>
-    public partial class Home : UserControl
+    public partial class CajaView : UserControl
     {
-        public Home()
+        public CajaView()
         {
             InitializeComponent();
         }
